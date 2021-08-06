@@ -1,13 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <title>Guess that song game</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
-    <title>Document</title>
 </head>
+
+<!-- Top bar of game with timer -->
 <body>
+
+    <header>
+        <nav class="View Highscores">
+            <a class="highscores" href="highscores.html">View Highscores</a>
+            <div class="navbar" id="navbarText"></div> 
+            <section class="navbar-text" id="restartButton">
+                Time: 60seconds
+            </section>
+        </nav>
+    </header>
+        <main>
+            <section id="start" class="startGame">
+                <h1>Guess that song game!</h1>
+                <p class="mainText">
+                    Welcome to Guess that song!  You will have a series of lyrics on cards that will be displayed for you, and it is up to you to guess what song it is or genre the song is from. You have 60 seconds to guess as man as you can.   
+                </p>
+
+                <p class="pointSystem">
+                    Guess the correct song = 10pts
+                    <br> 
+                    Guess the correct genre = 5pts
+                </p>
+
+                <button id="startGame">Start Game!</button>
+
+            </section>
+
+        
+        </main>
 
     <script src="assets/js/main.js"></script>
 </body>
