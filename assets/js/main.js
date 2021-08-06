@@ -3,6 +3,7 @@ let timeRemaining;
 
 let score = 0;
 
+//All of these are temp variables until we fetch the data
 let genreBtns = document.querySelectorAll('.answers');
 let correctGenre = 'Country';
 
