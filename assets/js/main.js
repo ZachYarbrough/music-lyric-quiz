@@ -5,14 +5,18 @@ let score = 0;
 
 //All of these are temp variables until we fetch the data
 let genreBtns = document.querySelectorAll('.answers');
-let correctGenre = 'Country';
+let correctGenre = 'Answer Option';
 
 //Gets highscores from local storage or makes an empty array
 let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
+let timeEl = document.querySelector('#timerEl');
+let scoreEl = document.querySelector('#pointsEl');
+
+resetTimer(20);
 
 genreBtns.forEach(genre => {
     genre.addEventListener('click', () => {
-        if(genre.textContent === correctGenre) {
+        if(genre.childNodes[3].textContent === correctGenre) {
             //If the answer is correct then the user gets 10 points
             console.log('Correct Answer');
             score += 10;
@@ -29,14 +33,24 @@ genreBtns.forEach(genre => {
 function updateLyrics() {
     console.log('Change lyrics');
     resetTimer(20);
+    updateScore();
 }
+
+function updateScore() {
+    if(score > 100) {
+        score = 100;
+    }
+    scoreEl.textContent = score + '/100';
+}
+
 //Timer counts down until it hits zero or the function is called again
 function resetTimer(seconds) {
     timeRemaining = seconds;
+    timeEl.textContent = timeRemaining;
     clearInterval(timer);
     timer = setInterval(function(){
         timeRemaining--;
-        console.log(timeRemaining);
+        timeEl.textContent = timeRemaining;
         if(timeRemaining === 0) {
             clearInterval(timer);
             updateLyrics();
