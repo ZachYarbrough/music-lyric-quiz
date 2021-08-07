@@ -11,8 +11,13 @@ let correctGenre = 'Answer Option';
 let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
 let timeEl = document.querySelector('#timerEl');
 let scoreEl = document.querySelector('#pointsEl');
+let highScoreNameEl = document.querySelectorAll('.highscore');
+let highScoreScoreEl = document.querySelectorAll('.score');
 
-resetTimer(20);
+//Checks if there is a timer element
+if(timeEl) {
+    resetTimer(20);
+}
 
 genreBtns.forEach(genre => {
     genre.addEventListener('click', () => {
@@ -65,4 +70,34 @@ function setHighScore(name, score) {
         score: score
     });
     localStorage.setItem('highscores', JSON.stringify(highScores));
+}
+
+//Checks if there is a highscore element
+if(highScoreNameEl) {
+    sortLeaderboard();
+    displayHighScore();
+}
+
+//Sorts highscores based on highest scores
+function sortLeaderboard() {
+    let temp = 0;
+    for (let i = 0; i < highScores.length; i++) {
+      for (let j = i; j < highScores.length; j++) {
+        if (highScores[j].score > highScores[i].score) {
+          temp = highScores[j];
+          highScores[j] = highScores[i];
+          highScores[i] = temp;
+        }
+      }
+    }
+  }
+
+//Displays highscores from local storage
+function displayHighScore() {
+    for(let i = 0; i < highScores.length; i++) {
+        if(i < 5) {
+            highScoreNameEl[i].textContent = highScores[i].name;
+            highScoreScoreEl[i].textContent = highScores[i].score;
+        }
+    }
 }
