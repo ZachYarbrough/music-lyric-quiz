@@ -7,6 +7,9 @@ let score = 0;
 let genreBtns = document.querySelectorAll('.answers');
 let correctGenre = 'Country';
 
+//Gets highscores from local storage or makes an empty array
+let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
+
 genreBtns.forEach(genre => {
     genre.addEventListener('click', () => {
         if(genre.textContent === correctGenre) {
@@ -39,4 +42,13 @@ function resetTimer(seconds) {
             updateLyrics();
         }
     }, 1000);
+}
+
+//Sets highscore to an array of objects with names and scores.
+function setHighScore(name, score) {
+    highScores.push({
+        name: name,
+        score: score
+    });
+    localStorage.setItem('highscores', JSON.stringify(highScores));
 }
