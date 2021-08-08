@@ -14,43 +14,59 @@ let highScoreScoreEl = document.querySelectorAll('.score');
 //FETCHING DATA STARTS
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let formatGenre = '?format=jsonp&callback=genreCallback';
+let formatTrack = '?format=jsonp&callback=trackCallback';
 let formatLyrics = '?format=jsonp&callback=lyricCallback';
-let trackLyrics = 'music.genres.get';
-let apiKey = '&apikey=65151b10d06c1827c4ec097955298402'
+let fetchGenre = 'music.genres.get';
+let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10'
 let genres = [{
-    name: 'Orchestral',
-    id: 18
+    name: 'Rock',
+    id: 118
 }, {
-    name: 'Stories',
-    id: 12
+    name: 'Rock',
+    id: 118
 },{
-    name: 'Percussion',
-    id: 34
+    name: 'Rock',
+    id: 118
 },{
-    name: 'Oratorio',
-    id: 26
+    name: 'Rock',
+    id: 118
 }];
 let randomGenre = genres[Math.floor(Math.random() * genres.length)];
 let filterGenres = '&f_music_genre_id=' + randomGenre.id;
 
+let trackId = 183276826;
+
 function genreCallback (data) {
     //Loads json objects
     for(var i = 0; i < genreBtns.length; i++) {
-        genreBtns[i].childNodes[3].textContent = data.message.body.music_genre_list[genres[i].id].music_genre.music_genre_name;
+        genreBtns[i].childNodes[3].textContent = genres[i].name;
     }
 }
 
-function lyricCallback (data) {
+function trackCallback (data) {
     //Loads json objects
-    console.log(data.message.body.track_list);
+        if(data.message.body.track_list[1].track.has_lyrics === 1) {
+            trackId = data.message.body.track_list[1].track.track_id;
+        }
+}
+
+let questionEl = document.querySelector('.question-text')
+
+function lyricCallback (data) {
+    console.log(data);
+    questionEl.textContent = data.message.body.snippet.snippet_body;
 }
 
 var genreScript =  document.createElement('script');
-genreScript.src = url + trackLyrics + formatGenre + apiKey;
+genreScript.src = url + fetchGenre + formatGenre + apiKey;
 document.body.appendChild(genreScript);
 
+var trackScript =  document.createElement('script');
+trackScript.src = url + 'track.search' + formatTrack + filterGenres + apiKey;
+document.body.appendChild(trackScript);
+
 var lyricScript =  document.createElement('script');
-lyricScript.src = url + 'track.search' + formatLyrics + filterGenres + apiKey;
+lyricScript.src = url + 'track.snippet.get' + formatLyrics + '&track_id=' + trackId + apiKey;
 document.body.appendChild(lyricScript);
 
 //FETCHING DATA ENDS
