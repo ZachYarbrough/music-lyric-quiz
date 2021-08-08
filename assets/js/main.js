@@ -1,7 +1,16 @@
+// Initialize variables and constants
 let timer;
 let timeRemaining;
-
+let genreRap = 18;
+let genreRnB = 15;
+let genreCountry = 6;
+let genreRock = 21;
 let score = 0;
+let apiKey = "65151b10d06c1827c4ec097955298402";
+let formatURL = "?format=json&callback=callback";
+let hasLyrics = "&f_has_lyrics=";
+let musicGenre = "&f_music_genre_id=";
+let language = "&f_lyrics_language=";
 
 //All of these are temp variables until we fetch the data
 let genreBtns = document.querySelectorAll('.answers');
@@ -101,3 +110,26 @@ function displayHighScore() {
         }
     }
 }
+
+$.ajax({
+    data: {
+        apikey: apiKey,
+        f_music_genre_id: 6,
+        //f_lyrics_language: en,
+        //f_has_lyrics: true,
+
+    },
+    url: "http://api.musixmatch.com/ws/1.1/track.get?api",
+    dataType: "jsonp",
+    contentType: 'application/json',
+    success: function(data) {
+        console.log(json);
+        alert("Success");        
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
+        alert(errorThrown + " " + jqXHR + " " + textStatus);
+    }
+});
