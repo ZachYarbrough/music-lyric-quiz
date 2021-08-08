@@ -1,6 +1,6 @@
+// Initialize variables and constants
 let timer;
 let timeRemaining;
-
 let score = 0;
 
 //All of these are temp variables until we fetch the data
@@ -101,3 +101,4 @@ function displayHighScore() {
         }
     }
 }
+
