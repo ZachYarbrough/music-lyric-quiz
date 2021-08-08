@@ -1,20 +1,8 @@
 // Initialize variables and constants
 let timer;
 let timeRemaining;
-let genreRap = 18;
-let genreRnB = 15;
-let genreCountry = 6;
-let genreRock = 21;
-let score = 0;
-let apiKey = "65151b10d06c1827c4ec097955298402";
-let formatURL = "?format=json&callback=callback";
-let hasLyrics = "&f_has_lyrics=";
-let musicGenre = "&f_music_genre_id=";
-let language = "&f_lyrics_language=";
 
-//All of these are temp variables until we fetch the data
-let genreBtns = document.querySelectorAll('.answers');
-let correctGenre = 'Answer Option';
+let score = 0;
 
 //Gets highscores from local storage or makes an empty array
 let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
@@ -22,6 +10,54 @@ let timeEl = document.querySelector('#timerEl');
 let scoreEl = document.querySelector('#pointsEl');
 let highScoreNameEl = document.querySelectorAll('.highscore');
 let highScoreScoreEl = document.querySelectorAll('.score');
+
+//FETCHING DATA STARTS
+let url = 'https://api.musixmatch.com/ws/1.1/';
+let formatGenre = '?format=jsonp&callback=genreCallback';
+let formatLyrics = '?format=jsonp&callback=lyricCallback';
+let trackLyrics = 'music.genres.get';
+let apiKey = '&apikey=65151b10d06c1827c4ec097955298402'
+let genres = [{
+    name: 'Orchestral',
+    id: 18
+}, {
+    name: 'Stories',
+    id: 12
+},{
+    name: 'Percussion',
+    id: 34
+},{
+    name: 'Oratorio',
+    id: 26
+}];
+let randomGenre = genres[Math.floor(Math.random() * genres.length)];
+let filterGenres = '&f_music_genre_id=' + randomGenre.id;
+
+function genreCallback (data) {
+    //Loads json objects
+    for(var i = 0; i < genreBtns.length; i++) {
+        genreBtns[i].childNodes[3].textContent = data.message.body.music_genre_list[genres[i].id].music_genre.music_genre_name;
+    }
+}
+
+function lyricCallback (data) {
+    //Loads json objects
+    console.log(data.message.body.track_list);
+}
+
+var genreScript =  document.createElement('script');
+genreScript.src = url + trackLyrics + formatGenre + apiKey;
+document.body.appendChild(genreScript);
+
+var lyricScript =  document.createElement('script');
+lyricScript.src = url + 'track.search' + formatLyrics + filterGenres + apiKey;
+document.body.appendChild(lyricScript);
+
+//FETCHING DATA ENDS
+
+//All of these are temp variables until we fetch the data
+let genreBtns = document.querySelectorAll('.answers');
+let correctGenre = randomGenre.name;
 
 //Checks if there is a timer element
 if(timeEl) {
@@ -82,7 +118,7 @@ function setHighScore(name, score) {
 }
 
 //Checks if there is a highscore element
-if(highScoreNameEl) {
+if(highScoreNameEl > 0) {
     sortLeaderboard();
     displayHighScore();
 }
@@ -110,26 +146,3 @@ function displayHighScore() {
         }
     }
 }
-
-$.ajax({
-    data: {
-        apikey: apiKey,
-        f_music_genre_id: 6,
-        //f_lyrics_language: en,
-        //f_has_lyrics: true,
-
-    },
-    url: "http://api.musixmatch.com/ws/1.1/track.get?api",
-    dataType: "jsonp",
-    contentType: 'application/json',
-    success: function(data) {
-        console.log(json);
-        alert("Success");        
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-        alert(errorThrown + " " + jqXHR + " " + textStatus);
-    }
-});
