@@ -21,15 +21,15 @@ let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10'
 //Genre ids and names that can be changed/used outside of the fetch request for html elements
 let genres = [{
     name: 'Rock',
-    id: 3
+    id: 21
 }, {
-    name: 'Rock',
-    id: 11
+    name: 'R&B / Soul',
+    id: 15
 },{
     name: 'Country',
-    id: 1037
+    id: 6
 },{
-    name: 'Hip Hop',
+    name: 'Hip Hop / Rap',
     id: 18
 }];
 
