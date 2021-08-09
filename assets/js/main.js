@@ -12,10 +12,13 @@ let highScoreNameEl = document.querySelectorAll('.highscore');
 let highScoreScoreEl = document.querySelectorAll('.score');
 
 //FETCHING DATA STARTS
+//Data for the actual fetch request
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let format = '?format=json';
 let fetchGenre = 'music.genres.get';
 let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10'
+
+//Genre ids and names that can be changed/used outside of the fetch request for html elements
 let genres = [{
     name: 'Rock',
     id: 3
@@ -30,18 +33,22 @@ let genres = [{
     id: 18
 }];
 
+//Picks a random genre to fetch
 let randomGenre = genres[Math.floor(Math.random() * genres.length)]
 
 let trackId;
 
+//Fetches the entire music genre list
 fetch(url + fetchGenre + format + apiKey).then(function(response) {
     return response.json();
 }).then(function(data) {
     console.log(data.message.body.music_genre_list);
+    //Assigns genre button elements to a genre name
     for(var i = 0; i < genreBtns.length; i++) {
         genreBtns[i].childNodes[3].textContent = genres[i].name;
     }
     let genreArr = [];
+    //Loops through the music genres and finds the genres based on the genres array's ids
     for(var i = 0; i < data.message.body.music_genre_list.length; i++) {
         switch (data.message.body.music_genre_list[i].music_genre.music_genre_id) {
             case genres[0].id:
@@ -60,16 +67,18 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
     }
 
     let filterGenres = '&f_music_genre_id=' + randomGenre.id;
-
+    //fetches 10 tracks from one of the four genres
     fetch(url + 'track.search' + format + filterGenres + apiKey).then(function(response) {
         return response.json();
     }).then(function(data) {
         console.log(data.message.body.track_list[0]);
+        //loops through the tracks to find a song with lyrics
         for(var i = 0; i < data.message.body.track_list.length; i++) {
             if(data.message.body.track_list[i].track.has_lyrics === 1) {
                 trackId = data.message.body.track_list[i].track.track_id;
             }
         }
+        //fetches a snippet from the track with lyrics
         fetch(url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
             return response.json()
         }).then(function(data) {
