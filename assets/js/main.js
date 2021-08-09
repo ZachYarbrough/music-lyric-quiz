@@ -1,20 +1,8 @@
 // Initialize variables and constants
 let timer;
 let timeRemaining;
-let genreRap = 18;
-let genreRnB = 15;
-let genreCountry = 6;
-let genreRock = 21;
-let score = 0;
-let apiKey = "65151b10d06c1827c4ec097955298402";
-let formatURL = "?format=json&callback=callback";
-let hasLyrics = "&f_has_lyrics=";
-let musicGenre = "&f_music_genre_id=";
-let language = "&f_lyrics_language=";
 
-//All of these are temp variables until we fetch the data
-let genreBtns = document.querySelectorAll('.answers');
-let correctGenre = 'Answer Option';
+let score = 0;
 
 //Gets highscores from local storage or makes an empty array
 let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
@@ -22,6 +10,89 @@ let timeEl = document.querySelector('#timerEl');
 let scoreEl = document.querySelector('#pointsEl');
 let highScoreNameEl = document.querySelectorAll('.highscore');
 let highScoreScoreEl = document.querySelectorAll('.score');
+
+//FETCHING DATA STARTS
+//Data for the actual fetch request
+let url = 'https://api.musixmatch.com/ws/1.1/';
+let format = '?format=json';
+let fetchGenre = 'music.genres.get';
+let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10'
+
+//Genre ids and names that can be changed/used outside of the fetch request for html elements
+let genres = [{
+    name: 'Rock',
+    id: 3
+}, {
+    name: 'Rock',
+    id: 11
+},{
+    name: 'Country',
+    id: 1037
+},{
+    name: 'Hip Hop',
+    id: 18
+}];
+
+//Picks a random genre to fetch
+let randomGenre = genres[Math.floor(Math.random() * genres.length)]
+
+let trackId;
+
+//Fetches the entire music genre list
+fetch(url + fetchGenre + format + apiKey).then(function(response) {
+    return response.json();
+}).then(function(data) {
+    console.log(data.message.body.music_genre_list);
+    //Assigns genre button elements to a genre name
+    for(var i = 0; i < genreBtns.length; i++) {
+        genreBtns[i].childNodes[3].textContent = genres[i].name;
+    }
+    let genreArr = [];
+    //Loops through the music genres and finds the genres based on the genres array's ids
+    for(var i = 0; i < data.message.body.music_genre_list.length; i++) {
+        switch (data.message.body.music_genre_list[i].music_genre.music_genre_id) {
+            case genres[0].id:
+                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                break;
+            case genres[1].id:
+                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                break;
+            case genres[2].id:
+                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                break;
+            case genres[3].id:
+                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                break;
+        }
+    }
+
+    let filterGenres = '&f_music_genre_id=' + randomGenre.id;
+    //fetches 10 tracks from one of the four genres
+    fetch(url + 'track.search' + format + filterGenres + apiKey).then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        console.log(data.message.body.track_list[0]);
+        //loops through the tracks to find a song with lyrics
+        for(var i = 0; i < data.message.body.track_list.length; i++) {
+            if(data.message.body.track_list[i].track.has_lyrics === 1) {
+                trackId = data.message.body.track_list[i].track.track_id;
+            }
+        }
+        //fetches a snippet from the track with lyrics
+        fetch(url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
+            return response.json()
+        }).then(function(data) {
+            console.log(data.message.body);
+            questionEl.textContent = data.message.body.snippet.snippet_body;
+        })
+    })
+})
+
+//FETCHING DATA ENDS
+
+//All of these are temp variables until we fetch the data
+let genreBtns = document.querySelectorAll('.answers');
+let correctGenre = randomGenre.name;
 
 //Checks if there is a timer element
 if(timeEl) {
@@ -82,7 +153,7 @@ function setHighScore(name, score) {
 }
 
 //Checks if there is a highscore element
-if(highScoreNameEl) {
+if(highScoreNameEl > 0) {
     sortLeaderboard();
     displayHighScore();
 }
@@ -110,26 +181,3 @@ function displayHighScore() {
         }
     }
 }
-
-$.ajax({
-    data: {
-        apikey: apiKey,
-        f_music_genre_id: 6,
-        //f_lyrics_language: en,
-        //f_has_lyrics: true,
-
-    },
-    url: "http://api.musixmatch.com/ws/1.1/track.get?api",
-    dataType: "jsonp",
-    contentType: 'application/json',
-    success: function(data) {
-        console.log(json);
-        alert("Success");        
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-        alert(errorThrown + " " + jqXHR + " " + textStatus);
-    }
-});
