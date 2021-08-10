@@ -13,6 +13,7 @@ let highScoreScoreEl = document.querySelectorAll('.score');
 
 //FETCHING DATA STARTS
 //Data for the actual fetch request
+let cors = 'https://cors-anywhere.herokuapp.com/';
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let format = '?format=json';
 let fetchGenre = 'music.genres.get';
@@ -39,7 +40,7 @@ let randomGenre = genres[Math.floor(Math.random() * genres.length)]
 let trackId;
 
 //Fetches the entire music genre list
-fetch(url + fetchGenre + format + apiKey).then(function(response) {
+fetch(cors + url + fetchGenre + format + apiKey).then(function(response) {
     return response.json();
 }).then(function(data) {
     console.log(data.message.body.music_genre_list);
@@ -68,7 +69,7 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
 
     let filterGenres = '&f_music_genre_id=' + randomGenre.id;
     //fetches 10 tracks from one of the four genres
-    fetch(url + 'track.search' + format + filterGenres + apiKey).then(function(response) {
+    fetch(cors + url + 'track.search' + format + filterGenres + apiKey).then(function(response) {
         return response.json();
     }).then(function(data) {
         console.log(data.message.body.track_list[0]);
@@ -79,7 +80,7 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
             }
         }
         //fetches a snippet from the track with lyrics
-        fetch(url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
+        fetch(cors + url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
             return response.json()
         }).then(function(data) {
             console.log(data.message.body);
