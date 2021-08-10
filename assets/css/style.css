@@ -8,3 +8,9 @@ main, body{
     top: 0px;
     z-index: 9999;
 }
+
+@media screen and (max-width:962px) {
+    .smol {
+        width: 100%;
+    }
+}
