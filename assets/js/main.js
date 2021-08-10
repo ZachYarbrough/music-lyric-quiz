@@ -13,6 +13,7 @@ let highScoreScoreEl = document.querySelectorAll('.score');
 
 //FETCHING DATA STARTS
 //Data for the actual fetch request
+//let cors = 'https://cors-anywhere.herokuapp.com/';
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let format = '?format=json';
 let fetchGenre = 'music.genres.get';
@@ -23,26 +24,24 @@ let genres = [{
     name: 'Rock',
     id: 21
 }, {
-    name: 'R&B / Soul',
+    name: 'R&B/Soul',
     id: 15
 },{
     name: 'Country',
     id: 6
 },{
-    name: 'Hip Hop / Rap',
+    name: 'Hip Hop/Rap',
     id: 18
 }];
 
-//Picks a random genre to fetch
-let randomGenre = genres[Math.floor(Math.random() * genres.length)]
-
 let trackId;
+
+let storedTracks = [];
 
 //Fetches the entire music genre list
 fetch(url + fetchGenre + format + apiKey).then(function(response) {
     return response.json();
 }).then(function(data) {
-    console.log(data.message.body.music_genre_list);
     //Assigns genre button elements to a genre name
     for(var i = 0; i < genreBtns.length; i++) {
         genreBtns[i].childNodes[3].textContent = genres[i].name;
@@ -66,38 +65,35 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
         }
     }
 
-    let filterGenres = '&f_music_genre_id=' + randomGenre.id;
-    //fetches 10 tracks from one of the four genres
-    fetch(url + 'track.search' + format + filterGenres + apiKey).then(function(response) {
-        return response.json();
-    }).then(function(data) {
-        console.log(data.message.body.track_list[0]);
-        //loops through the tracks to find a song with lyrics
-        for(var i = 0; i < data.message.body.track_list.length; i++) {
-            if(data.message.body.track_list[i].track.has_lyrics === 1) {
-                trackId = data.message.body.track_list[i].track.track_id;
-            }
-        }
-        //fetches a snippet from the track with lyrics
-        fetch(url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
-            return response.json()
+    for(var i = 0; i < genres.length; i++) {
+
+        let filterGenres = '&f_music_genre_id=' + genres[i].id;
+
+        //fetches tracks from one of the four genres
+        fetch(url + 'track.search' + format + filterGenres + '&f_lyrics_language=en&f_has_lyrics=1' + apiKey).then(function(response) {
+            return response.json();
         }).then(function(data) {
-            console.log(data.message.body);
-            questionEl.textContent = data.message.body.snippet.snippet_body;
+            //loops through the tracks to find a song with lyrics
+            for(var i = 0; i < data.message.body.track_list.length; i++) {
+                if(data.message.body.track_list[i].track.has_lyrics === 1) {
+                    trackId = data.message.body.track_list[i].track.track_id;
+                    storedTracks.push(data.message.body.track_list[i]);
+                }
+            }
         })
-    })
+    }
 })
 
 //FETCHING DATA ENDS
-
 //All of these are temp variables until we fetch the data
 let genreBtns = document.querySelectorAll('.answers');
-let correctGenre = randomGenre.name;
+let correctGenre;
+
+if(timerEl) {
+    resetTimer(15);
+}
 
 //Checks if there is a timer element
-if(timeEl) {
-    resetTimer(20);
-}
 
 genreBtns.forEach(genre => {
     genre.addEventListener('click', () => {
@@ -114,11 +110,46 @@ genreBtns.forEach(genre => {
     })
 });
 
+
+let questionCap = 0;
+let usedLyrics = [];
+
 //Changes the lyrics when the user inputs an answer or time runs out
 function updateLyrics() {
-    console.log('Change lyrics');
-    resetTimer(20);
-    updateScore();
+    if(questionCap >= 11) {
+        console.log('Game Finished');
+        return;
+    }
+    console.log(questionCap)
+    let track = storedTracks[Math.floor(Math.random() * storedTracks.length)].track;
+    let trackId = track.track_id;
+    let trackGenre = track.primary_genres.music_genre_list[0].music_genre.music_genre_name;
+    if(track.primary_genres.music_genre_list.length > 1) {
+        for(var i = 0; i < track.primary_genres.music_genre_list.length; i++) {
+            for(var j = 0; j < genres.length; j++) {
+                if(track.primary_genres.music_genre_list[i].music_genre.music_genre_id === genres[j].id) {
+                    trackGenre = track.primary_genres.music_genre_list[i].music_genre.music_genre_name;
+                }
+            }
+        }
+    }
+    correctGenre = trackGenre;
+    //fetches a snippet from the track with lyrics
+    fetch(url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
+        return response.json()
+    }).then(function(data) {
+        for(var i = 0; i < usedLyrics.length; i++) {
+            if(data.message.body.snippet.snippet_body === usedLyrics[i]) {
+                console.log('repeat');
+                return updateLyrics();
+            }
+        }
+        questionEl.textContent = data.message.body.snippet.snippet_body;
+        usedLyrics.push(data.message.body.snippet.snippet_body);
+        resetTimer(15);
+        updateScore();
+        questionCap++;
+    })
 }
 
 function updateScore() {
@@ -136,7 +167,7 @@ function resetTimer(seconds) {
     timer = setInterval(function(){
         timeRemaining--;
         timeEl.textContent = timeRemaining;
-        if(timeRemaining === 0) {
+        if(timeRemaining <= 0) {
             clearInterval(timer);
             updateLyrics();
         }
