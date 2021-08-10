@@ -70,7 +70,7 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
         let filterGenres = '&f_music_genre_id=' + genres[i].id;
 
         //fetches tracks from one of the four genres
-        fetch(url + 'track.search' + format + filterGenres + '&f_has_lyrics=1' + apiKey).then(function(response) {
+        fetch(url + 'track.search' + format + filterGenres + '&f_lyrics_language=en&f_has_lyrics=1' + apiKey).then(function(response) {
             return response.json();
         }).then(function(data) {
             //loops through the tracks to find a song with lyrics
