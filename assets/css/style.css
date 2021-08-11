@@ -8,3 +8,7 @@ main, body{
     top: 0px;
     z-index: 9999;
 }
+
+#dropdown1 {
+    max-width: 8%;
+}
