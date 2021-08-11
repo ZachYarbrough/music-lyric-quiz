@@ -20,7 +20,7 @@ let saveBtn = document.querySelector('#saveScoreBtn');
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let format = '?format=json';
 let fetchGenre = 'music.genres.get';
-let apiKey = '&apikey=f412cd89f03c170c21358a2b58ad96d8';
+let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10';
 
 //Genre ids and names that can be changed/used outside of the fetch request for html elements
 let genres = [{
@@ -116,6 +116,7 @@ genreBtns.forEach(genre => {
 } else if( window.location.pathname === '/end.html/end.html') {
     console.log(questionCap)
     finalScore.childNodes[1].textContent = JSON.parse(localStorage.getItem('currScore'));
+    displayGif(JSON.parse(localStorage.getItem('currScore')))
     username.addEventListener('keyup', () => {
         saveBtn.disabled = !username.value;
     });
@@ -127,6 +128,31 @@ genreBtns.forEach(genre => {
 } else if(window.location.pathname === '/high-scores.html/high-scores.html') {
     sortLeaderboard();
     displayHighScore();
+}
+
+function displayGif(totalScore){
+    let gifEl = document.querySelector('#pointsEl');
+    let gifImg = document.createElement('img');
+    if(totalScore >= 70) {
+        fetch('https://api.giphy.com/v1/gifs/search?q=victory&api_key=HvaacROi9w5oQCDYHSIk42eiDSIXH3FN').then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            gifImg.setAttribute('src', data.data[Math.floor(Math.random()*data.data.length)].images.fixed_height.url);
+        });
+    } else if(totalScore >= 50 && totalScore < 70) {
+        fetch('https://api.giphy.com/v1/gifs/search?q=good&api_key=HvaacROi9w5oQCDYHSIk42eiDSIXH3FN').then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            gifImg.setAttribute('src', data.data[Math.floor(Math.random()*data.data.length)].images.fixed_height.url);
+        });
+    } else if (totalScore >= 0 && totalScore < 50) {
+        fetch('https://api.giphy.com/v1/gifs/search?q=defeat&api_key=HvaacROi9w5oQCDYHSIk42eiDSIXH3FN').then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            gifImg.setAttribute('src', data.data[Math.floor(Math.random()*data.data.length)].images.fixed_height.url);
+        });
+    }
+    gifEl.append(gifImg);
 }
 
 //Changes the lyrics when the user inputs an answer or time runs out
