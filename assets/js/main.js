@@ -9,15 +9,18 @@ let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
 let timeEl = document.querySelector('#timerEl');
 let scoreEl = document.querySelector('#pointsEl');
 let highScoreNameEl = document.querySelectorAll('.highscore');
-let highScoreScoreEl = document.querySelectorAll('.score');
+let highScoreScoreEl = document.querySelectorAll('.scores');
 
-//FETCHING DATA STARTS
+let finalScore = document.querySelector('#pointsEl');
+let username = document.querySelector('#username');
+let saveBtn = document.querySelector('#saveScoreBtn');
+
 //Data for the actual fetch request
 //let cors = 'https://cors-anywhere.herokuapp.com/';
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let format = '?format=json';
 let fetchGenre = 'music.genres.get';
-let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10'
+let apiKey = '&apikey=f412cd89f03c170c21358a2b58ad96d8'
 
 //Genre ids and names that can be changed/used outside of the fetch request for html elements
 let genres = [{
@@ -38,7 +41,18 @@ let trackId;
 
 let storedTracks = [];
 
-//Fetches the entire music genre list
+//All of these are temp variables until we fetch the data
+let genreBtns = document.querySelectorAll('.answers');
+let correctGenre;
+
+let genreStart = document.querySelector('#genreSelector');
+
+let questionCap = 0;
+let usedLyrics = [];
+
+if(window.location.pathname === '/index.html'){
+} else if(window.location.pathname === '/game.html/game.html') {
+    //Fetches the entire music genre list
 fetch(url + fetchGenre + format + apiKey).then(function(response) {
     return response.json();
 }).then(function(data) {
@@ -64,7 +78,6 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
                 break;
         }
     }
-
     for(var i = 0; i < genres.length; i++) {
 
         let filterGenres = '&f_music_genre_id=' + genres[i].id;
@@ -74,27 +87,17 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
             return response.json();
         }).then(function(data) {
             //loops through the tracks to find a song with lyrics
-            for(var i = 0; i < data.message.body.track_list.length; i++) {
-                if(data.message.body.track_list[i].track.has_lyrics === 1) {
-                    trackId = data.message.body.track_list[i].track.track_id;
-                    storedTracks.push(data.message.body.track_list[i]);
+            for(var j = 0; j < data.message.body.track_list.length; j++) {
+                if(data.message.body.track_list[j].track.has_lyrics === 1) {
+                    trackId = data.message.body.track_list[j].track.track_id;
+                    storedTracks.push(data.message.body.track_list[j]);
                 }
             }
+            updateLyrics();
         })
     }
 })
-
-//FETCHING DATA ENDS
-//All of these are temp variables until we fetch the data
-let genreBtns = document.querySelectorAll('.answers');
-let correctGenre;
-
-if(timerEl) {
-    resetTimer(15);
-}
-
-//Checks if there is a timer element
-
+    //Checks if there is a timer element
 genreBtns.forEach(genre => {
     genre.addEventListener('click', () => {
         if(genre.childNodes[3].textContent === correctGenre) {
@@ -110,14 +113,27 @@ genreBtns.forEach(genre => {
     })
 });
 
-
-let questionCap = 0;
-let usedLyrics = [];
+} else if( window.location.pathname === '/end.html/end.html') {
+    console.log(questionCap)
+    finalScore.childNodes[1].textContent = JSON.parse(localStorage.getItem('currScore'));
+    username.addEventListener('keyup', () => {
+        saveBtn.disabled = !username.value;
+    });
+    saveBtn.addEventListener('click', (event)=> {
+        event.preventDefault();
+        setHighScore(username.value, finalScore.childNodes[1].textContent);
+        window.location.assign('../high-scores.html/high-scores.html')
+    })
+} else if(window.location.pathname === '/high-scores.html/high-scores.html') {
+    sortLeaderboard();
+    displayHighScore();
+}
 
 //Changes the lyrics when the user inputs an answer or time runs out
 function updateLyrics() {
     if(questionCap >= 11) {
-        console.log('Game Finished');
+        localStorage.setItem('currScore', JSON.stringify(score));
+        window.location.assign('../end.html/end.html');
         return;
     }
     console.log(questionCap)
@@ -139,8 +155,7 @@ function updateLyrics() {
         return response.json()
     }).then(function(data) {
         for(var i = 0; i < usedLyrics.length; i++) {
-            if(data.message.body.snippet.snippet_body === usedLyrics[i]) {
-                console.log('repeat');
+            if(data.message.body.snippet.snippet_body === usedLyrics[i] && data.message.body.snippet.snippet_body === '') {
                 return updateLyrics();
             }
         }
@@ -181,12 +196,6 @@ function setHighScore(name, score) {
         score: score
     });
     localStorage.setItem('highscores', JSON.stringify(highScores));
-}
-
-//Checks if there is a highscore element
-if(highScoreNameEl > 0) {
-    sortLeaderboard();
-    displayHighScore();
 }
 
 //Sorts highscores based on highest scores
