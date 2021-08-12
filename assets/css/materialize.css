@@ -6844,7 +6844,7 @@ textarea.materialize-textarea {
 [type="checkbox"]:checked {
   position: absolute;
   opacity: 0;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 [type="checkbox"] {
