@@ -20,7 +20,7 @@ let saveBtn = document.querySelector('#saveScoreBtn');
 let cors = 'https://api.allorigins.win/get?raw&url='
 let url = 'https://api.musixmatch.com/ws/1.1/';
 let fetchGenre = 'music.genres.get';
-let apiKey = 'apikey=f412cd89f03c170c21358a2b58ad96d8';
+let apiKey = 'apikey=16c39b57637be8d9dd6b64b98dfdae10';
 
 //Genre ids and names that can be changed/used outside of the fetch request for html elements
 let genres = [{
