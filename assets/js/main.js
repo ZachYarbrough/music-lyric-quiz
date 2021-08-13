@@ -17,10 +17,10 @@ let saveBtn = document.querySelector('#saveScoreBtn');
 
 //Data for the actual fetch request
 //let cors = 'https://cors-anywhere.herokuapp.com/';
+let cors = 'https://api.allorigins.win/get?raw&url='
 let url = 'https://api.musixmatch.com/ws/1.1/';
-let format = '?format=json';
 let fetchGenre = 'music.genres.get';
-let apiKey = '&apikey=16c39b57637be8d9dd6b64b98dfdae10';
+let apiKey = 'apikey=16c39b57637be8d9dd6b64b98dfdae10';
 
 //Genre ids and names that can be changed/used outside of the fetch request for html elements
 let genres = [{
@@ -50,31 +50,31 @@ let genreStart = document.querySelector('#genreSelector');
 let questionCap = 0;
 let usedLyrics = [];
 
-if(window.location.pathname === '/index.html'){
-} else if(window.location.pathname === '/game.html/game.html') {
+if(timeEl) {
     //Fetches the entire music genre list
-fetch(url + fetchGenre + format + apiKey).then(function(response) {
+fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(response) {
     return response.json();
 }).then(function(data) {
+    let jsonData = JSON.parse(data.contents);
     //Assigns genre button elements to a genre name
     for(var i = 0; i < genreBtns.length; i++) {
         genreBtns[i].childNodes[3].textContent = genres[i].name;
     }
     let genreArr = [];
     //Loops through the music genres and finds the genres based on the genres array's ids
-    for(var i = 0; i < data.message.body.music_genre_list.length; i++) {
-        switch (data.message.body.music_genre_list[i].music_genre.music_genre_id) {
+    for(var i = 0; i < jsonData.message.body.music_genre_list.length; i++) {
+        switch (jsonData.message.body.music_genre_list[i].music_genre.music_genre_id) {
             case genres[0].id:
-                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                genreArr.push(jsonData.message.body.music_genre_list[i].music_genre);
                 break;
             case genres[1].id:
-                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                genreArr.push(jsonData.message.body.music_genre_list[i].music_genre);
                 break;
             case genres[2].id:
-                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                genreArr.push(jsonData.message.body.music_genre_list[i].music_genre);
                 break;
             case genres[3].id:
-                genreArr.push(data.message.body.music_genre_list[i].music_genre);
+                genreArr.push(jsonData.message.body.music_genre_list[i].music_genre);
                 break;
         }
     }
@@ -83,14 +83,15 @@ fetch(url + fetchGenre + format + apiKey).then(function(response) {
         let filterGenres = '&f_music_genre_id=' + genres[i].id;
 
         //fetches tracks from one of the four genres
-        fetch(url + 'track.search' + format + filterGenres + '&f_lyrics_language=en&f_has_lyrics=1' + apiKey).then(function(response) {
+        fetch(cors + encodeURIComponent(url + 'track.search' + filterGenres + '&f_lyrics_language=en&f_has_lyrics=1' + '&' + apiKey)).then(function(response) {
             return response.json();
         }).then(function(data) {
+            let jsonData = JSON.parse(data.contents);
             //loops through the tracks to find a song with lyrics
-            for(var j = 0; j < data.message.body.track_list.length; j++) {
-                if(data.message.body.track_list[j].track.has_lyrics === 1) {
-                    trackId = data.message.body.track_list[j].track.track_id;
-                    storedTracks.push(data.message.body.track_list[j]);
+            for(var j = 0; j < jsonData.message.body.track_list.length; j++) {
+                if(jsonData.message.body.track_list[j].track.has_lyrics === 1) {
+                    trackId = jsonData.message.body.track_list[j].track.track_id;
+                    storedTracks.push(jsonData.message.body.track_list[j]);                    
                 }
             }
             updateLyrics();
@@ -113,7 +114,7 @@ genreBtns.forEach(genre => {
     })
 });
 
-} else if( window.location.pathname === '/end.html/end.html') {
+} else if(username) {
     console.log(questionCap)
     finalScore.childNodes[1].textContent = JSON.parse(localStorage.getItem('currScore'));
     displayGif(JSON.parse(localStorage.getItem('currScore')))
@@ -125,7 +126,7 @@ genreBtns.forEach(genre => {
         setHighScore(username.value, finalScore.childNodes[1].textContent);
         window.location.assign('../high-scores.html/high-scores.html')
     })
-} else if(window.location.pathname === '/high-scores.html/high-scores.html') {
+} else if(highScoreNameEl) {
     sortLeaderboard();
     displayHighScore();
 }
@@ -177,16 +178,17 @@ function updateLyrics() {
     }
     correctGenre = trackGenre;
     //fetches a snippet from the track with lyrics
-    fetch(url + 'track.snippet.get' + format + '&track_id=' + trackId + apiKey).then(function(response) {
+    fetch(cors + encodeURIComponent(url + 'track.snippet.get' + '?track_id=' + trackId + '&' + apiKey)).then(function(response) {
         return response.json()
     }).then(function(data) {
+        let jsonData = JSON.parse(data.contents);
         for(var i = 0; i < usedLyrics.length; i++) {
-            if(data.message.body.snippet.snippet_body === usedLyrics[i] && data.message.body.snippet.snippet_body === '') {
+            if(jsonData.message.body.snippet.snippet_body === usedLyrics[i] && jsonData.message.body.snippet.snippet_body === '') {
                 return updateLyrics();
             }
         }
-        questionEl.textContent = data.message.body.snippet.snippet_body;
-        usedLyrics.push(data.message.body.snippet.snippet_body);
+        questionEl.textContent = jsonData.message.body.snippet.snippet_body;
+        usedLyrics.push(jsonData.message.body.snippet.snippet_body);
         resetTimer(15);
         updateScore();
         questionCap++;
