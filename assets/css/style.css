@@ -159,3 +159,16 @@ main, body{
     transition: color 0.4s ease;
 }
 
+/* Optimization for small mac screens */
+
+@media only screen and (max-width: 1850px) {
+  .hide-on-mac {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 1850px) {
+  .show-on-mac {
+    display: block !important;
+  }
+}
