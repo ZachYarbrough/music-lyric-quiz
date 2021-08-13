@@ -91,7 +91,7 @@ fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(
             for(var j = 0; j < jsonData.message.body.track_list.length; j++) {
                 if(jsonData.message.body.track_list[j].track.has_lyrics === 1) {
                     trackId = jsonData.message.body.track_list[j].track.track_id;
-                    storedTracks.push(jsonData.message.body.track_list[j]);
+                    storedTracks.push(jsonData.message.body.track_list[j]);                    
                 }
             }
             updateLyrics();
