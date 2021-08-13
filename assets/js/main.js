@@ -50,8 +50,7 @@ let genreStart = document.querySelector('#genreSelector');
 let questionCap = 0;
 let usedLyrics = [];
 
-if(window.location.pathname === '/index.html' || window.location.pathname === '/music-lyric-quiz/index.html'){
-} else if(window.location.pathname === '/game.html/game.html' || window.location.pathname === '/music-lyric-quiz/game.html/game.html') {
+if(timeEl) {
     //Fetches the entire music genre list
 fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(response) {
     return response.json();
@@ -115,7 +114,7 @@ genreBtns.forEach(genre => {
     })
 });
 
-} else if( window.location.pathname === '/end.html/end.html' || window.location.pathname === '/music-lyric-quiz/end.html/end.html') {
+} else if(username) {
     console.log(questionCap)
     finalScore.childNodes[1].textContent = JSON.parse(localStorage.getItem('currScore'));
     displayGif(JSON.parse(localStorage.getItem('currScore')))
@@ -127,7 +126,7 @@ genreBtns.forEach(genre => {
         setHighScore(username.value, finalScore.childNodes[1].textContent);
         window.location.assign('../high-scores.html/high-scores.html')
     })
-} else if(window.location.pathname === '/high-scores.html/high-scores.html' || window.location.pathname === '/music-lyric-quiz/high-scores.html/high-scores.html') {
+} else if(highScoreNameEl) {
     sortLeaderboard();
     displayHighScore();
 }
