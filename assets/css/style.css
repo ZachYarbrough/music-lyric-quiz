@@ -159,16 +159,44 @@ main, body{
     transition: color 0.4s ease;
 }
 
+.no-style {
+  list-style: none;
+}
+
+.centered {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 /* Optimization for small mac screens */
 
 @media only screen and (max-width: 1850px) {
-  .hide-on-mac {
+  .hide-on-mac-only {
     display: none !important;
   }
 }
 
-@media only screen and (min-width: 1850px) {
+@media only screen and (max-width: 1850px) {
   .show-on-mac {
-    display: block !important;
+    display: inline-block !important;
+  }
+}
+
+@media only screen and (max-width: 1120px) {
+  .hide-for-nav {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 1120px) {
+  .show-for-nav {
+    display: inherit !important;
+  }
+}
+
+@media only screen and (min-width: 1121px) {
+  .hide-for-big-nav {
+    display: none !important;
   }
 }
