@@ -2889,13 +2889,13 @@ ul.staggered-list li {
   }
 }
 
-@media only screen and (min-width: 993px) {
+@media only screen and (max-width: 993px) {
   .hide-on-large-only {
     display: none !important;
   }
 }
 
-@media only screen and (min-width: 1201px) {
+@media only screen and (max-width: 1201px) {
   .hide-on-extra-large-only {
     display: none !important;
   }
