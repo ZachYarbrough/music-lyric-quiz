@@ -14,6 +14,7 @@ let highScoreScoreEl = document.querySelectorAll('.scores');
 let finalScore = document.querySelector('#pointsEl');
 let username = document.querySelector('#username');
 let saveBtn = document.querySelector('#saveScoreBtn');
+let questionNum = document.querySelector('#questionNum');
 
 //Data for the actual fetch request
 //let cors = 'https://cors-anywhere.herokuapp.com/';
@@ -49,8 +50,13 @@ let genreStart = document.querySelector('#genreSelector');
 
 let questionCap = 0;
 let usedLyrics = [];
+const elem = document.getElementById('modal1');
+const instance = M.Modal.init(elem, {dismissible: false});
+let countdownEl = document.querySelector('#countdown');
+let countdown = 5;
 
 if(timeEl) {
+    instance.open();
     //Fetches the entire music genre list
 fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(response) {
     return response.json();
@@ -94,9 +100,17 @@ fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(
                     storedTracks.push(jsonData.message.body.track_list[j]);                    
                 }
             }
-            updateLyrics();
         })
     }
+    let countDownStart = setInterval(()=> {
+        countdown--;
+        countdownEl.textContent = countdown;
+        if(countdown <= 0) {
+            clearInterval(countDownStart);
+            updateLyrics();
+            instance.close();
+        }
+    }, 1000);
 })
     //Checks if there is a timer element
 genreBtns.forEach(genre => {
@@ -192,6 +206,7 @@ function updateLyrics() {
         resetTimer(15);
         updateScore();
         questionCap++;
+        questionNum.textContent = questionCap;
     })
 }
 

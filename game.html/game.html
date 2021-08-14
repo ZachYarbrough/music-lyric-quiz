@@ -94,12 +94,19 @@
     <div class="container">
         <hr>
     </div>
+      <!-- Modal Structure -->
+  <div id="modal1" class="modal">
+    <div class="modal-content white-text indigo darken-4">
+      <h3 class="center">Game Starts in...</h3>
+      <h3 class="center" id="countdown">5</h3>
+    </div>
+  </div>
     <!-- Begin Question/Answers Card -->
     <div class="container">
         <div class="card indigo darken-4" id="cardEl">
             <div class="card-content white-text center">
                 <span class="card-title flow-text" id="questionNumberEl">
-                    <h3>Question -</h3>
+                    <h3>Question <span id="questionNum">-</span></h3>
                 </span>
                 <div class="container">
                     <div class="container">
@@ -157,9 +164,9 @@
     </div>
 
     <!--JavaScript at end of body for optimized loading-->
-    <script src="../assets/js/main.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 
 </html>
