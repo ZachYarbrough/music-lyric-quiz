@@ -50,6 +50,18 @@ let genreStart = document.querySelector('#genreSelector');
 let questionCap = 0;
 let usedLyrics = [];
 
+//copies to clipboard
+let text = 'https://zachyarbrough.github.io/music-lyric-quiz/';
+let shareButtonEl = document.querySelector('#shareEl');
+
+shareButtonEl.addEventListener('click', ()=>{
+    navigator.clipboard.writeText(text).then(function() {
+        console.log('Async: Copying to clipboard was successful!');
+      }, function(err) {
+        console.error('Async: Could not copy text: ', err);
+      });
+});
+
 if(timeEl) {
     //Fetches the entire music genre list
 fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(response) {
