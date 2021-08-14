@@ -8,12 +8,14 @@ let score = 0;
 let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
 let timeEl = document.querySelector('#timerEl');
 let scoreEl = document.querySelector('#pointsEl');
+
 let highScoreNameEl = document.querySelectorAll('.highscore');
 let highScoreScoreEl = document.querySelectorAll('.scores');
 
 let finalScore = document.querySelector('#pointsEl');
 let username = document.querySelector('#username');
 let saveBtn = document.querySelector('#saveScoreBtn');
+let questionNum = document.querySelector('#questionNum');
 
 //Data for the actual fetch request
 //let cors = 'https://cors-anywhere.herokuapp.com/';
@@ -49,8 +51,14 @@ let genreStart = document.querySelector('#genreSelector');
 
 let questionCap = 0;
 let usedLyrics = [];
+if(genreStart) {
+}else if(timeEl) {
+    const elem = document.getElementById('modal1');
+    const instance = M.Modal.init(elem, {dismissible: false});
+    let countdownEl = document.querySelector('#countdown');
+    let countdown = 5;
 
-if(timeEl) {
+    instance.open();
     //Fetches the entire music genre list
 fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(response) {
     return response.json();
@@ -94,9 +102,17 @@ fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(
                     storedTracks.push(jsonData.message.body.track_list[j]);                    
                 }
             }
-            updateLyrics();
         })
     }
+    let countDownStart = setInterval(()=> {
+        countdown--;
+        countdownEl.textContent = countdown;
+        if(countdown <= 0) {
+            clearInterval(countDownStart);
+            updateLyrics();
+            instance.close();
+        }
+    }, 1000);
 })
     //Checks if there is a timer element
 genreBtns.forEach(genre => {
@@ -158,7 +174,7 @@ function displayGif(totalScore){
 
 //Changes the lyrics when the user inputs an answer or time runs out
 function updateLyrics() {
-    if(questionCap >= 11) {
+    if(questionCap >= 10) {
         localStorage.setItem('currScore', JSON.stringify(score));
         window.location.assign('../end.html/end.html');
         return;
@@ -192,6 +208,7 @@ function updateLyrics() {
         resetTimer(15);
         updateScore();
         questionCap++;
+        questionNum.textContent = questionCap;
     })
 }
 
@@ -241,7 +258,7 @@ function sortLeaderboard() {
   }
 
 //Displays highscores from local storage
-function displayHighScore() {
+function displayHighScore() { 
     for(let i = 0; i < highScores.length; i++) {
         if(i < 5) {
             highScoreNameEl[i].textContent = highScores[i].name;
