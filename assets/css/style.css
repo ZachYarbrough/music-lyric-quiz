@@ -176,6 +176,10 @@ main, body{
   justify-content: center;
 }
 
+.hover-1:hover {
+  background-color: #13174b !important;
+}
+
 /* Optimization for small mac screens */
 
 @media only screen and (max-width: 1850px) {
