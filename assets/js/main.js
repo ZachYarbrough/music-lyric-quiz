@@ -50,12 +50,12 @@ let genreStart = document.querySelector('#genreSelector');
 
 let questionCap = 0;
 let usedLyrics = [];
-const elem = document.getElementById('modal1');
-const instance = M.Modal.init(elem, {dismissible: false});
-let countdownEl = document.querySelector('#countdown');
-let countdown = 5;
-
 if(timeEl) {
+    const elem = document.getElementById('modal1');
+    const instance = M.Modal.init(elem, {dismissible: false});
+    let countdownEl = document.querySelector('#countdown');
+    let countdown = 5;
+
     instance.open();
     //Fetches the entire music genre list
 fetch(cors + encodeURIComponent(url + fetchGenre + '?' + apiKey)).then(function(response) {
@@ -172,7 +172,7 @@ function displayGif(totalScore){
 
 //Changes the lyrics when the user inputs an answer or time runs out
 function updateLyrics() {
-    if(questionCap >= 11) {
+    if(questionCap >= 10) {
         localStorage.setItem('currScore', JSON.stringify(score));
         window.location.assign('../end.html/end.html');
         return;
