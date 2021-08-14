@@ -1,7 +1,7 @@
 :root {
     /* --primary-color: rgba(20, 61, 89, 0.75); */
     --overlay-color: rgba(68, 68, 68, 0.85);
-    --menu-speed: 0.75s;
+    --menu-speed: 0.5s;
   }
 
 main, body{
@@ -12,7 +12,7 @@ main, body{
     position: -webkit-sticky;
     position: sticky;
     top: 0px;
-    z-index: 1;
+    z-index: 9999;
 }
 
   /* MENU STYLES */
@@ -58,7 +58,7 @@ main, body{
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s ease;
+    transition: all 0.7s ease;
   }
   
   /* Hamburger Lines - Top & Bottom */
@@ -129,8 +129,8 @@ main, body{
 .menu-wrap .menu > div {
     background: var(--overlay-color);
     border-radius: 50%;
-    width: 200vw;
-    height: 200vw;
+    width: 300vw;
+    height: 300vw;
     display: flex;
     flex: none;
     align-items: center;
