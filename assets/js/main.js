@@ -8,6 +8,7 @@ let score = 0;
 let highScores = JSON.parse(localStorage.getItem("highscores") || "[]");
 let timeEl = document.querySelector('#timerEl');
 let scoreEl = document.querySelector('#pointsEl');
+
 let highScoreNameEl = document.querySelectorAll('.highscore');
 let highScoreScoreEl = document.querySelectorAll('.scores');
 
@@ -50,7 +51,8 @@ let genreStart = document.querySelector('#genreSelector');
 
 let questionCap = 0;
 let usedLyrics = [];
-if(timeEl) {
+if(genreStart) {
+}else if(timeEl) {
     const elem = document.getElementById('modal1');
     const instance = M.Modal.init(elem, {dismissible: false});
     let countdownEl = document.querySelector('#countdown');
@@ -256,7 +258,7 @@ function sortLeaderboard() {
   }
 
 //Displays highscores from local storage
-function displayHighScore() {
+function displayHighScore() { 
     for(let i = 0; i < highScores.length; i++) {
         if(i < 5) {
             highScoreNameEl[i].textContent = highScores[i].name;
