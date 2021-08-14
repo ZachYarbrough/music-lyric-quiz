@@ -25,39 +25,70 @@
     <!-- Begin Nav -->
 
     
-        <nav class="indigo darken-4 send-to-back">
-            
-            <a href="../index.html" class="brand-logo center">Lyricado</a>
-            
-            <div class="menu-wrap">
-                
-                <input type="checkbox" class="toggler">
-                <div class="hamburger">
-                    <div></div>
-                </div>
-                <div class="menu">
+    <nav class="indigo darken-4 hide-for-nav sticky">
+        <a href="../index.html" class="brand-logo center">Lyricado</a>
+        <div class="menu-wrap">
+            <input type="checkbox" class="toggler">
+            <div class="hamburger">
+                <div></div>
+            </div>
+            <div class="menu">
+                <div>
                     <div>
-                        <div>
-                            <ul>
-                                <li><a href="../index.html">Home</a></li>
-                                <li><a href="#">List of API's</a></li>
-                                <li><a href="../high-scores.html/high-scores.html">High Scores</a></li>
-                            </ul>
-                        </div>
+                        <ul>
+                            <li><a href="../index.html">Home</a></li>
+                            <li>
+                                <a href="#" class="waves-effect waves-dark dropdown-button"
+                                    data-activates="dropdown1">JavaScript API's Used</a>
+
+                            </li>
+                            <li><a href="../high-scores.html/high-scores.html">High Scores</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            
-        </nav>
+        </div>
+
+    </nav>
+
+    <!-- Begin Mobile Nav and Game Nav Combined -->
+
+    <nav class="indigo darken-4 show-for-nav hide-for-big-nav sticky">
+        <a href="#" class="brand-logo center">Lyricado</a>
+        <div class="menu-wrap">
+            <input type="checkbox" class="toggler">
+            <div class="hamburger">
+                <div></div>
+            </div>
+            <div class="menu">
+                <div>
+                    <div>
+                        <ul class="centered">
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="#">List of API's</a></li>
+                            <li><a href="../high-scores.html/high-scores.html">High Scores</a></li>
+                            <li>
+                                <a class="waves-effect waves-dark"
+                                    href="https://github.com/ZachYarbrough/music-lyric-quiz" target="_blank">Visit The
+                                    Repo!</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     
 
     <!-- Begin Timer/Game Title -->
 
-    <div class="toast container yellow darken-3 sticky">
-        <h3 class="white-text" id="timerEl">20</h3>
-        <h3 class="white-text" id="gameTitleEl">Guess The Genre!</h3>
-        <h3 class="white-text" id="pointsEl">-/100</h3>
+    <div class="toast container yellow darken-3 sticky-score">
+        
+        <h4><span class="hide-on-med-and-down">Time Left: </span><span class="white-text" id="timerEl">20</span></h4>
+        <!-- <h5 class="white-text" id="gameTitleEl">Guess The Genre!</h5> -->
+        <h4><span class="hide-on-med-and-down">Score: </span><span class="white-text" id="pointsEl">0/100</span></h4>
     </div>
+    
     <br>
     <br>
     <div class="container">
