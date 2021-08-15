@@ -2,7 +2,7 @@
 
 ## Description 
 
-A game that tests your knowledge of music genres. Can you guess the genre based soley on the lyrics of a song?
+A game that tests your knowledge of music genres. Can you guess the genre based only on the lyrics of a song?
 
 ![Game Screen](assets/images/readme/readme-image-2.png)
 ![End Screen](assets/images/readme/readme-image-3.png)
